@@ -2,8 +2,10 @@
 
 Enemy::Enemy(int startposition)
 {
-	
+	m_position = startposition;
 }
+
+Enemy::Enemy() {} // weil compeiler sonst nicht funktioniert
 
 Enemy::~Enemy()
 {
@@ -11,12 +13,12 @@ Enemy::~Enemy()
 
 int Enemy::getPosition()
 {
-	return 0;
+	return m_position;
 }
 
 int Enemy::move()
 {
-	return 0;
+	return m_position = m_position - 1;
 }
 
 void Enemy::hit()

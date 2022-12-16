@@ -13,7 +13,10 @@ Artillery::~Artillery() {}
 
 
  void Artillery::shoot() {
-
+	 while (m_energylevel > 0) {
+		 //...print 1 Bullet glaube ich weis aber nicht wie
+		 m_energylevel = m_energylevel - 1;
+	 }
 
  }
  void Artillery::hit() {

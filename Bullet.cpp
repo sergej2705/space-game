@@ -2,19 +2,22 @@
 
 Bullet::Bullet()
 {
+	 m_position = 1;
 }
 
 Bullet::~Bullet()
 {
+
 }
 
 void Bullet::move()
 {
+	m_position = m_position + 1;
 }
 
 int Bullet::getPosition()
 {
-	return 0;
+	return m_position; 
 }
 
 int Bullet::getDamage()

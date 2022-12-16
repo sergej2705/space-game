@@ -5,6 +5,7 @@ using namespace std;
 class Enemy {
 public:
 	Enemy(int startPosition);
+	Enemy();
 	~Enemy();
 	
 	int getPosition();
