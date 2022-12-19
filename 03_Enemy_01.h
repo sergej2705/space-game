@@ -21,7 +21,7 @@ private:
 };
 
 //----------------------------------------------------------------------------------------
-
+//cpp
 
 Enemy::Enemy(int number, int startposition, int health)
 {
