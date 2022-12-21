@@ -1,67 +1,50 @@
 #pragma once
-#include <iostream>
-#include <string>
+
 #include "Bullet.h"
 
-using namespace std;
-
-class Artillery {
+class Artillery
+{
 public:
-	Artillery(int number, int position, int health);
-	~Artillery();
-	void shoot();
-	void hit();
-	int getPosition();
+	Artillery(int *health)
+	{
+		m_energylevel = 0;
+		m_position = 0;
+		m_health = health;
+	}
 
+	~Artillery() {}
 
+	Bullet *shoot()
+	{
+		if (*m_health > 0)
+		{
+			if (m_energylevel > 0)
+			{
+				m_energylevel--;
+				return new Bullet(0, 1, 1);
+			}
+		}
+
+		return nullptr;
+	}
+
+	void load(int energy)
+	{
+		m_energylevel = m_energylevel + energy;
+	}
+
+	void hit()
+	{
+		*m_health = *m_health - 1;
+	}
+
+	int getPosition()
+	{
+		return m_position;
+	}
 
 private:
 	int m_energylevel;
-	int m_number;
 	int m_position;
-	int m_health;
+	int *m_health;
 };
-
-
-//----------------------------------------------------------------------------------------
-//cpp
-
-
-
-
-
-Artillery::Artillery(int number, int position, int health) {
-	m_energylevel = 3;
-	m_number = number;
-	m_position = position;
-	m_health = health;
-
-}
-Artillery::~Artillery() 
-{
-	
-}
-
-
-void Artillery::shoot() {
-	if (m_health > 0) {
-		int i = 0;
-		while (m_energylevel > 0) {
-			//Bullet::Bullet(5, 1, 1, 1);
-			m_energylevel = m_energylevel - 1;
-			i++;
-		}
-	}
-
-}
-void Artillery::hit() {
-	m_health--;
-	cout << "Aua_Artillery" << endl;
-
-}
-
-int Artillery::getPosition() {
-	return m_position;
-}
-
-
