@@ -1,25 +1,27 @@
-#include "Firinglane.h"
+#include "SpaceGame.h"
 
 using namespace std;
 
-int length = 50;
+char difficultyInput;
+int difficulty;
 
-int life = 3;
-int *health = &life;
+int length = 50;
+int tickLength = 300;
 
 int main()
 {
-	Firinglane lane(length, health);
-
-	while (*health > 0)
+	do
 	{
-		lane.tick();
-
 		system("clear");
-		cout << lane.print() << endl;
-		cout << *health << " lifes left" << endl;
-		this_thread::sleep_for(chrono::milliseconds(300));
-	}
 
-	cout << "You lose!" << endl;
+		cout << "Choose a difficulty: 1 (easy) to 3 (hard)" << endl;
+		cin >> difficultyInput;
+		difficulty = difficultyInput - 48;
+	} while (difficulty < 1 || difficulty > 3);
+
+	SpaceGame game(difficulty);
+
+	game.start();
+
+	system("clear");
 }

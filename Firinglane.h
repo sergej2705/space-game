@@ -19,6 +19,7 @@ class Firinglane
 public:
   Firinglane(int length, int *health) : m_artillery(Artillery(health))
   {
+    m_ticks_passed = 0;
     m_length = length;
     m_health = health;
     enemies = {};
@@ -34,7 +35,7 @@ public:
   string print()
   {
     char *lane = new char[m_length];
-    std::fill_n(lane, m_length, ' ');
+    fill_n(lane, m_length, ' ');
 
     for (Enemy &enemy : enemies)
     {
@@ -73,24 +74,28 @@ public:
     }
   }
 
+  void load(int energy)
+  {
+    m_artillery.load(energy);
+  }
+
   void tick()
   {
-    if (rand() % 100 > 80)
+    m_ticks_passed++;
+
+    if (rand() % 10000 > max(9900 - m_ticks_passed, 5000))
     {
       enemies.push_back(Enemy(m_length, 1, 1));
     }
 
-    // TODO: implement user interaction
-    if (rand() % 100 > 90)
+    if (enemies.size() > 0)
     {
-      m_artillery.load(3);
-    }
+      Bullet *bullet = m_artillery.shoot();
 
-    Bullet *bullet = m_artillery.shoot();
-
-    if (bullet)
-    {
-      bullets.push_back(*bullet);
+      if (bullet)
+      {
+        bullets.push_back(*bullet);
+      }
     }
 
     for (Enemy &enemy : enemies)
@@ -113,7 +118,13 @@ public:
     detectCollision();
   }
 
+  int getPassedTicks()
+  {
+    return m_ticks_passed;
+  }
+
 private:
+  int m_ticks_passed;
   int m_length;
   int *m_health;
   Artillery m_artillery;
