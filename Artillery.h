@@ -14,9 +14,9 @@ public:
 
 	~Artillery() {}
 
-	Bullet *shoot()
+	Bullet *tick(int ticksPassed)
 	{
-		if (*m_health > 0)
+		if (ticksPassed % 2 == 0)
 		{
 			if (m_energylevel > 0)
 			{

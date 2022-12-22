@@ -3,12 +3,12 @@
 class Player
 {
 public:
-  Player(int startX, int startY, int boundX, int boundY)
+  Player(int startX, int startY)
   {
-    m_x = startX;
-    m_y = startY;
-    m_bound_x = boundX;
-    m_bound_y = boundY;
+    m_position_x = startX;
+    m_position_y = startY;
+    m_bound_x = 0;
+    m_bound_y = 0;
     m_energy = 0;
   }
 
@@ -18,12 +18,12 @@ public:
 
   int getPositionX()
   {
-    return m_x;
+    return m_position_x;
   }
 
   int getPositionY()
   {
-    return m_y;
+    return m_position_y;
   }
 
   void loadEnergy(int energy)
@@ -45,39 +45,45 @@ public:
 
   void moveLeft()
   {
-    if (m_x - 1 >= 1)
+    if (m_position_x - 1 >= 1)
     {
-      m_x--;
+      m_position_x--;
     }
   }
 
   void moveRight()
   {
-    if (m_x + 1 <= m_bound_x)
+    if (m_position_x + 1 <= m_bound_x)
     {
-      m_x++;
+      m_position_x++;
     }
   }
 
   void moveUp()
   {
-    if (m_y - 1 >= 1)
+    if (m_position_y - 1 >= 1)
     {
-      m_y--;
+      m_position_y--;
     }
   }
 
   void moveDown()
   {
-    if (m_y + 1 <= m_bound_y)
+    if (m_position_y + 1 <= m_bound_y)
     {
-      m_y++;
+      m_position_y++;
     }
   }
 
+  void setBound(int x, int y)
+  {
+    m_bound_x = x;
+    m_bound_y = y;
+  }
+
 private:
-  int m_x;
-  int m_y;
+  int m_position_x;
+  int m_position_y;
   int m_bound_x;
   int m_bound_y;
   int m_energy;

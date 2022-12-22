@@ -12,22 +12,21 @@
 using namespace std;
 
 int width = 10;
-int height = 5;
 
 class SpaceGame
 {
 public:
-  SpaceGame(int difficulty) : m_player(Player(2, 1, width, height))
+  SpaceGame(int difficulty) : m_player(Player(2, 1))
   {
     m_difficulty = difficulty;
 
     m_health = 6 - m_difficulty;
 
-    m_tickLength = 300 - m_difficulty * 50;
-
     m_length = 50;
     m_width = width;
-    m_height = height;
+    m_height = getFiringlaneY(difficulty) - 2;
+
+    m_player.setBound(m_width, m_height);
 
     m_lanes = {};
     for (int i = 0; i < m_difficulty; i++)
@@ -35,6 +34,7 @@ public:
       m_lanes.push_back(Firinglane(m_length, &m_health));
     }
 
+    // ncureses init
     initscr();
     curs_set(0);
     m_gamearea = newwin(m_height + 2, m_width + 2, 0, 0);
@@ -46,7 +46,7 @@ public:
 
   ~SpaceGame()
   {
-
+    // ncurses clean up
     wclear(m_gamearea);
     endwin();
   }
@@ -55,7 +55,7 @@ public:
   {
     system("clear");
 
-    print(m_gamearea);
+    print();
     mvaddstr(m_height + 2, 0, string("Move to start").c_str());
 
     halfdelay(100);
@@ -66,18 +66,20 @@ public:
       switch (input)
       {
       case KEY_DOWN:
+      case 's':
         m_player.moveDown();
         break;
       case KEY_UP:
+      case 'w':
         m_player.moveUp();
         break;
       case KEY_LEFT:
+      case 'a':
         m_player.moveLeft();
         break;
       case KEY_RIGHT:
+      case 'd':
         m_player.moveRight();
-        break;
-      case ' ':
         break;
       }
 
@@ -100,8 +102,7 @@ public:
         lane.tick();
       }
 
-      print(m_gamearea);
-      // addstr(string(m_health).c_str());
+      print();
       halfdelay(3);
     }
 
@@ -116,10 +117,16 @@ public:
       mvaddstr(1, 0, string("You hit the jackpot and set the new highscore with " + to_string(score) + "!").c_str());
       mvaddstr(3, 0, string("The old highscore was " + to_string(highScore)).c_str());
     }
+    else
+    {
+      mvaddstr(1, 0, string("You scored " + to_string(score) + ", that's not enough to crack the jackpot!").c_str());
+      mvaddstr(3, 0, string("The old highscore was " + to_string(highScore)).c_str());
+    }
     refresh();
 
-    string end;
-    cin >> end;
+    halfdelay(100);
+    input = getch();
+    system("clear");
   }
 
 private:
@@ -128,7 +135,7 @@ private:
     int score = 0;
 
     string line;
-    ifstream scoreFile("score.sav");
+    ifstream scoreFile("score." + to_string(m_difficulty) + ".sav");
     if (scoreFile.is_open())
     {
       getline(scoreFile, line);
@@ -141,7 +148,7 @@ private:
 
   void setHighScore(int score)
   {
-    ofstream scoreFile("score.sav");
+    ofstream scoreFile("score." + to_string(m_difficulty) + ".sav");
     if (scoreFile.is_open())
     {
       scoreFile << to_string(score);
@@ -154,13 +161,13 @@ private:
     return (i + 1) * 2 - 1;
   }
 
-  void print(WINDOW *w)
+  void print()
   {
-    wclear(w);
+    wclear(m_gamearea);
     clear();
-    box(w, 0, 0);
+    box(m_gamearea, 0, 0);
 
-    mvwaddch(w, 1, 1, 'x');
+    mvwaddch(m_gamearea, 1, 1, 'x');
 
     for (int i = 0; i < m_lanes.size(); i++)
     {
@@ -171,10 +178,17 @@ private:
       mvaddstr(y, m_width + 2, lane.print().c_str());
     }
 
-    mvwaddch(w, m_player.getPositionY(), m_player.getPositionX(), m_player.hasEnergy() ? '0' : 'O');
+    for (int i = 1; i <= m_health; i++)
+    {
+      mvaddch(m_height + 2, i, '.');
+    }
+    mvaddstr(m_height + 4, 1, string("Score:").c_str());
+    mvaddstr(m_height + 5, 1, to_string(m_lanes.at(0).getPassedTicks()).c_str());
+
+    mvwaddch(m_gamearea, m_player.getPositionY(), m_player.getPositionX(), m_player.hasEnergy() ? '0' : 'O');
 
     refresh();
-    wrefresh(w);
+    wrefresh(m_gamearea);
   }
 
   Player m_player;
@@ -182,9 +196,9 @@ private:
   int m_width;
   int m_height;
   int m_difficulty;
-  int m_tickLength;
   int m_length;
   int m_health;
+
   WINDOW *m_gamearea;
   vector<Firinglane> m_lanes;
 };

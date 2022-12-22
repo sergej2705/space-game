@@ -14,10 +14,12 @@ int main()
 	{
 		system("clear");
 
-		cout << "Choose a difficulty: 1 (easy) to 3 (hard)" << endl;
+		cout << "Choose a difficulty: 1 (easy) to 4 (extreme)" << endl;
 		cin >> difficultyInput;
 		difficulty = difficultyInput - 48;
-	} while (difficulty < 1 || difficulty > 3);
+	} while (difficulty < 1 || difficulty > 4);
+
+	system("clear");
 
 	SpaceGame game(difficulty);
 

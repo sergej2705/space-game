@@ -90,7 +90,7 @@ public:
 
     if (enemies.size() > 0)
     {
-      Bullet *bullet = m_artillery.shoot();
+      Bullet *bullet = m_artillery.tick(m_ticks_passed);
 
       if (bullet)
       {
